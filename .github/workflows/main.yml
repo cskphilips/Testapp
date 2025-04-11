@@ -1,4 +1,4 @@
-name: Playwright Tests
+edname: Playwright Tests
 
 on:
   push:
@@ -37,4 +37,4 @@ jobs:
 
       # Step 5: Run Playwright tests
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --headed
