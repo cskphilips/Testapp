@@ -1,16 +1,20 @@
-name: Playwright Automation
+name: Playwright Tests
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   run-playwright:
-    runs-on: ubuntu-latest
+    name: Run Playwright Tests
+    runs-on: self-hosted
 
     steps:
       # Step 1: Checkout the repository
@@ -21,14 +25,16 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '16' # Specify the Node.js version you want to use
+          node-version: '23.1.0' # Specify the Node.js version you want to use
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      # Step 4: Run Playwright tests
+      # Step 4: Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # Step 5: Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test
-
-     
