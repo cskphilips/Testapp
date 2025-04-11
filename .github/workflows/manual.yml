@@ -29,11 +29,11 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       # Step 4: Install Playwright browsers
       - name: Install Playwright browsers
-        run: npx playwright install
+        run: npx playwright install --with-deps
 
       # Step 5: Run Playwright tests
       - name: Run Playwright tests
