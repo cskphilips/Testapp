@@ -20,42 +20,8 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Playwright Browsers if not present
-        run: |
-          if [ ! -d ~/.cache/ms-playwright ]; then
-            echo "Downloading Playwright browsers..."
-            npx playwright install
-          else
-            echo "Browsers already installed."
-          fi
-
       - name: Run Playwright tests with HTML report
         run: |
-          npx playwright test --reporter=html
+          npx playwright test 
 
-      - name: Upload HTML report as artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: playwright-report
 
-  deploy-pages:
-      name: Deploy to GitHub Pages
-      needs: run-playwright
-      runs-on: ubuntu-latest
-      steps:
-        # Step 1: Checkout the repository
-        - name: Checkout repository
-          uses: actions/checkout@v3
-
-        # Step 2: Build or copy the HTML files to a deployment directory
-        - name: Prepare HTML for GitHub Pages
-          run: |
-            mkdir -p public
-            cp -r path/to/your/html/files/* public/
-
-        # Step 3: Deploy to GitHub Pages
-        - name: Deploy to GitHub Pages
-          uses: peaceiris/actions-gh-pages@v3
-          with:
-            github_token: ${{ secrets.GITHUB_TOKEN }}
-            publish_dir: ./public
