@@ -20,6 +20,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Install the dependiencies
+        run: |
+          npx playwright install --with-deps
+
       - name: Run Playwright tests with HTML report
         run: |
           npx playwright test 
