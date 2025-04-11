@@ -22,7 +22,7 @@ jobs:
 
       - name: Install the dependiencies
         run: |
-          npx playwright install --with-deps
+          npx playwright install
 
       - name: Run Playwright tests with HTML report
         run: |
