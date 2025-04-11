@@ -31,10 +31,4 @@ jobs:
       - name: Run Playwright tests
         run: npx playwright test
 
-      # Step 5: Upload Playwright test report (optional)
-      - name: Upload Playwright report
-        if: always() # Always upload the report even if the tests fail
-        uses: actions/upload-artifact@v3
-        with:
-          name: playwright-report
-          path: playwright-report # Adjust the path if your report is located elsewhere
+     
