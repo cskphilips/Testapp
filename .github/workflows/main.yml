@@ -36,11 +36,14 @@ jobs:
         run: npx playwright install --with-deps
 
       # Step 5: Run Playwright tests
-      - name: Run Playwright tests
-        run: npx playwright test
+      - name: Find the most recently created folder starting with "html-report"
+        run: |
+          RECENT_FOLDER=$(ls -td html-report*/ | head -1)
+          echo "RECENT_FOLDER=$RECENT_FOLDER" >> $GITHUB_ENV
+
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
-          path: playwright-report/
+          name: html-report
+          path: ${{ env.RECENT_FOLDER }}
           retention-days: 30
