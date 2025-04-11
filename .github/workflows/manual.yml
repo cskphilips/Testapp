@@ -17,15 +17,26 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install the dependiencies
-        run: |
-          npx playwright install
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23.1.0' # Specify the Node.js version you want to use
 
-      - name: Run Playwright tests with HTML report
-        run: |
-          npx playwright test 
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npx playwright install
+
+      # Step 5: Run Playwright tests
+      - name: Run Playwright tests
+        run: npx playwright test
 
 
