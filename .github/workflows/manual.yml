@@ -23,26 +23,6 @@ jobs:
         with:
           node-version: '16' # Specify the Node.js version you want to use
 
-      # Step 3: Install system dependencies for Playwright
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y software-properties-common
-          sudo add-apt-repository universe
-          sudo apt-get update
-          sudo apt-get install -y libgstreamer1.0-0 libgstreamer-plugins-base1.0-0 \
-                            libx264-dev libgstreamer-plugins-good1.0-0 \
-                            libgstreamer-plugins-bad1.0-0 \
-                            libgles2 libgbm1
-
-      # Step 4: Install dependencies
-      - name: Install dependencies
-        run: npm install
-
-      # Step 5: Install Playwright browsers
-      - name: Install Playwright browsers
-        run: npx playwright install
-
       # Step 6: Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test
