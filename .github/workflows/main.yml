@@ -38,10 +38,5 @@ jobs:
       # Step 5: Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test --headed
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: html-report
-          path: html-report-*/
-          retention-days: 30
+
   
