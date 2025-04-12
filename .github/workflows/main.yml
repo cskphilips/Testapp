@@ -29,13 +29,6 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-      #preventing the folder to delete
-      - name: Move reports to a safe location
-        run: mv html-report-* /tmp/
-      - name: Clean repository
-        run: git clean -ffdx
-      - name: Restore reports
-        run: mv /tmp/html-report-*
 
       # Step 2: Set up Node.js
       - name: Set up Node.js
