@@ -38,12 +38,19 @@ jobs:
       # Step 5: Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with:
-          name: html-report-*
-          path: html-report-*/
-          retention-days: 30
+      - name: Combine and Upload HTML Reports
+        run: |
+          mkdir -p combined-reports
+          for dir in html-report-*; do
+          if [ -d "$dir" ]; then
+           cp -r "$dir" combined-reports/
+          fi
+          done
+          - name: Upload Combined Artifact
+            uses: actions/upload-artifact@v4
+            with:
+              name: html-reports
+              path: combined-reports
 
 
 #name: Playwright CI and Publish Report to GitHub Pages
