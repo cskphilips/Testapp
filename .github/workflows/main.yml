@@ -66,7 +66,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests and Generate Report
-        run: npx playwright test --reporter=html
+        run: npx playwright test
 
       - name: Find HTML Report Folder
         id: find_report
