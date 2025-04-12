@@ -46,11 +46,11 @@ jobs:
            cp -r "$dir" combined-reports/
           fi
           done
-          - name: Upload Combined Artifact
-            uses: actions/upload-artifact@v4
-            with:
-              name: html-reports
-              path: combined-reports
+      - name: Upload Combined Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-reports
+          path: combined-reports
 
 
 #name: Playwright CI and Publish Report to GitHub Pages
