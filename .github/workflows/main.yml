@@ -17,13 +17,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
 
       #preventing the folder to delete
       - name: Clean repository
         run: git clean -ffdx --exclude=html-report-*
+
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       # Step 2: Set up Node.js
       - name: Set up Node.js
