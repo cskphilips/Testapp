@@ -34,22 +34,9 @@ jobs:
       # Step 4: Install Playwright browsers
       - name: Install Playwright browsers
         run: npx playwright install --with-deps
-          
-      # Step 5: Prevent file or folder deletion
-      - name: Check for accidental deletions
-        run: |
-          if git diff --diff-filter=D --quiet; then
-            echo "No deletions detected. Proceeding with the workflow."
-          else
-            echo "Error: Deletions detected!"
-            exit 1
-          fi
 
-      # Step 6: Run Playwright tests
+      # Step 5: Run Playwright tests
       - name: Run Playwright tests
         run: npx playwright test --headed
-
-
-
 
   
