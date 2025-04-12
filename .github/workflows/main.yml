@@ -107,6 +107,13 @@ jobs:
           # Force push to gh-pages to update the content
           git push origin --force "$GH_PAGES_BRANCH"
 
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30
+
       - name: Enable GitHub Pages
         uses: actions/configure-pages@v4
         if: always()
