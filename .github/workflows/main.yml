@@ -106,3 +106,19 @@ jobs:
 
           # Force push to gh-pages to update the content
           git push origin --force "$GH_PAGES_BRANCH"
+
+      - name: Enable GitHub Pages
+        uses: actions/configure-pages@v4
+        if: always()
+        with:
+          source: . # The root directory of your gh-pages branch
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        if: always()
+        with:
+          path: . # The root directory of your gh-pages branch
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+        if: always()
