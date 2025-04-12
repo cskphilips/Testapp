@@ -109,6 +109,19 @@ jobs:
         with:
           source: . # The root directory of your gh-pages branch
 
+      - name: Install GNU Tar (gtar)
+        if: runner.os == 'macOS'
+        run: |
+          brew install gnu-tar
+          echo "Adding gtar to PATH"
+          echo 'export PATH="/usr/local/opt/gnu-tar/libexec/gnubin:$PATH"' >> ~/.bash_profile
+          source ~/.bash_profile
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./path-to-pages-artifact
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         if: always()
