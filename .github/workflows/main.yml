@@ -1,42 +1,108 @@
-name: Playwright Tests
+#name: Playwright Tests
+#
+#on:
+#  push:
+#    branches:
+#      - main
+#  workflow_dispatch:
+#
+#permissions:
+#  contents: read
+#  pages: write
+#  id-token: write
+#
+#jobs:
+#  run-playwright:
+#    name: Run Playwright Tests
+#    runs-on: self-hosted
+#
+#    steps:
+#      # Step 1: Checkout the repository
+#      - name: Checkout repository
+#        uses: actions/checkout@v3
+#
+#      # Step 2: Set up Node.js
+#      - name: Set up Node.js
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: '23.1.0' # Specify the Node.js version you want to use
+#
+#      # Step 3: Install dependencies
+#      - name: Install dependencies
+#        run: npm install
+#
+#      # Step 4: Install Playwright browsers
+#      - name: Install Playwright browsers
+#        run: npx playwright install --with-deps
+#
+#      # Step 5: Run Playwright tests
+#      - name: Run Playwright tests
+#        run: npx playwright test --headed
+
+
+name: Playwright CI and Publish Report to GitHub Pages
 
 on:
   push:
-    branches:
-      - main
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches: [ main ] # Trigger on pushes to the main branch
 
 jobs:
-  run-playwright:
-    name: Run Playwright Tests
-    runs-on: self-hosted
+  playwright-and-publish:
+    runs-on: self-hosted # Ensure it runs on your self-hosted runner
 
     steps:
-      # Step 1: Checkout the repository
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      # Step 2: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '23.1.0' # Specify the Node.js version you want to use
+          node-version: '23.1.0' # Or your preferred Node.js version
 
-      # Step 3: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 4: Install Playwright browsers
-      - name: Install Playwright browsers
+      - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
-      # Step 5: Run Playwright tests
-      - name: Run Playwright tests
-        run: npx playwright test --headed
+      - name: Run Playwright Tests and Generate Report
+        run: npx playwright test --reporter=html
 
-  
+      - name: Find HTML Report Folder
+        id: find_report
+        run: |
+          REPORT_FOLDER=$(ls -d html-report-* | tail -n 1)
+          if [ -z "$REPORT_FOLDER" ]; then
+            echo "Error: No HTML report folder found."
+            exit 1
+          fi
+          echo "REPORT_FOLDER=$REPORT_FOLDER" >> "$GITHUB_OUTPUT"
+
+      - name: Configure Git for GitHub Pages Push
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
+
+      - name: Deploy to GitHub Pages
+        run: |
+          # Ensure you have SSH access configured on your self-hosted runner
+          # and the necessary SSH key added to your GitHub repository's
+          # Deploy Keys or Actions secrets.
+
+          REPORT_PATH="${{ steps.find_report.outputs.REPORT_FOLDER }}"
+          GH_PAGES_BRANCH="gh-pages"
+
+          # Check out the gh-pages branch if it exists, or create an orphan branch
+          git checkout --orphan "$GH_PAGES_BRANCH" || git checkout "$GH_PAGES_BRANCH"
+          git rm -rf . # Clean the gh-pages branch
+
+          # Copy the report folder content to the root
+          cp -r "$REPORT_PATH"/* .
+
+          # Add, commit, and push the changes
+          git add .
+          COMMIT_MESSAGE="Update Playwright Report ($(date +'%Y-%m-%d %H:%M:%S %Z%z'))"
+          git commit -m "$COMMIT_MESSAGE"
+
+          # Force push to gh-pages to update the content
+          git push origin --force "$GH_PAGES_BRANCH"
