@@ -37,14 +37,11 @@ jobs:
 
       # Step 5: Run Playwright tests
       - name: Run Playwright tests
-        run: |
-          TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          mkdir -p "html-report-${TIMESTAMP}"  #Create a unique directory for the report
-          npx playwright test --output="html-report-${TIMESTAMP}"
+        run: npx playwright test --headed
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: html-report
-          path: html-report-*/  # Upload all generated reports
+          name: playwright-report
+          path: playwright-report/
           retention-days: 30
   
