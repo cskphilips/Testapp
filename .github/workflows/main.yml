@@ -39,12 +39,12 @@ jobs:
       - name: Run Playwright tests
         run: |
           TIMESTAMP=$(date +%Y%m%d%H%M%S)
-          mkdir -p "playwright-report-${TIMESTAMP}"  #Create a unique directory for the report
-          npx playwright test --headed --output="playwright-report-${TIMESTAMP}"
+          mkdir -p "html-report-${TIMESTAMP}"  #Create a unique directory for the report
+          npx playwright test --output="html-report-${TIMESTAMP}"
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
-          name: playwright-report
-          path: playwright-report-*/  # Upload all generated reports
+          name: html-report
+          path: html-report-*/  # Upload all generated reports
           retention-days: 30
   
