@@ -109,23 +109,20 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
-        with:
+        with: null
         name: playwright-report
         path: playwright-report/
         retention-days: 30
-
       - name: Enable GitHub Pages
         uses: actions/configure-pages@v4
         if: always()
         with:
-          source: . # The root directory of your gh-pages branch
-
+          source: .
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         if: always()
         with:
-          path: . # The root directory of your gh-pages branch
-
+          path: .
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
         if: always()
