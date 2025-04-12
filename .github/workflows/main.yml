@@ -66,7 +66,24 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Playwright Tests and Generate Report
-        run: npx playwright test
+        run: |
+          npx playwright test --reporter=html
+          mkdir -p ./path-to-pages-artifact
+          cp -r html-report-* ./path-to-pages-artifact
+
+      - name: Debug Artifact Directory
+        run: |
+          echo "Listing files in the workspace..."
+          ls -al
+          echo "Checking artifact directory..."
+          ls -al ./path-to-pages-artifact || echo "Directory not found"
+
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./path-to-pages-artifact
+          name: github-pages
+          retention-days: 30
 
       - name: Find HTML Report Folder
         id: find_report
