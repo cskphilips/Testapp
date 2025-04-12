@@ -54,8 +54,10 @@ jobs:
 
       # Step 6: Deploy to GitHub  Pages
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
-        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./gh-pages
 
 
 #name: Playwright CI and Publish Report to GitHub Pages
