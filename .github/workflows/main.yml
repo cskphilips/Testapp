@@ -85,10 +85,6 @@ jobs:
 
       - name: Deploy to GitHub Pages
         run: |
-          # Ensure you have SSH access configured on your self-hosted runner
-          # and the necessary SSH key added to your GitHub repository's
-          # Deploy Keys or Actions secrets.
-
           REPORT_PATH="${{ steps.find_report.outputs.REPORT_FOLDER }}"
           GH_PAGES_BRANCH="gh-pages"
 
@@ -107,25 +103,17 @@ jobs:
           # Force push to gh-pages to update the content
           git push origin --force "$GH_PAGES_BRANCH"
 
-      - uses: actions/upload-artifact@v4
-        if: ${{ !cancelled() }}
-        with: null
-
-      - name: playwright-report
-        path: playwright-report/
-        retention-days: 30
-
       - name: Enable GitHub Pages
         uses: actions/configure-pages@v4
         if: always()
         with:
-          source: .
+          source: . # The root directory of your gh-pages branch
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         if: always()
         with:
-          path: .
+          path: . # The root directory of your gh-pages branch
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
