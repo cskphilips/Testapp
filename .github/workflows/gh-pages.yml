@@ -2,12 +2,13 @@ name: Generate index.html
 
 on:
   push:
-    paths:
-      - 'gh-pages' # Trigger on any file changes
+    branches:
+      - gh-pages
+workflow_dispatch:
 
 jobs:
   create-index:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
     - name: Checkout repository
