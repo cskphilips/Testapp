@@ -1,54 +1,71 @@
-name: Generate All_Reports.html # Name of the workflow
+name: Generate and Deploy All_Reports.html
 
+# Trigger this workflow when anything changes inside the combined-reports folder
 on:
   push:
     paths:
-      - 'combined-reports/**' # Trigger this workflow on pushes to the combined-reports folder
+      - 'combined-reports/**'
 
 jobs:
-  generate-all-reports: # Name of the job
-    runs-on: self-hosted # Specifies the type of machine to run the job on
+  generate-report: # First job: create the HTML index
+    runs-on: self-hosted # You can change to ubuntu-latest if you don't use a self-hosted runner
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3 # Checks out the repository to the GitHub Actions environment
+        uses: actions/checkout@v3 # Checkout the code from the repo
 
-      - name: Generate All_Reports.html
+      - name: Prepare Testapp directory and generate All_Reports.html
         run: |
-          # Navigate to the combined-reports folder
-          cd combined-reports
-          
-          # Create the All_Reports.html file
+        # Create output structure and copy reports into Testapp/
+          mkdir -p Testapp/combined-reports
+          cp -r combined-reports/* Testapp/combined-reports/
+
+          # Navigate to the folder where HTML index will be generated
+          cd Testapp/combined-reports
+
+          # Start building the HTML index
           echo "<!DOCTYPE html>" > All_Reports.html
-          echo "<html>" >> All_Reports.html
-          echo "<head>" >> All_Reports.html
-          echo "<title>All Reports</title>" >> All_Reports.html
-          echo "</head>" >> All_Reports.html
-          echo "<body>" >> All_Reports.html
+          echo "<html><head><title>All Reports</title></head><body>" >> All_Reports.html
           echo "<h1>All Reports</h1>" >> All_Reports.html
-          
-          # List all folders and add links
+
+          # Add folder links (only folders inside combined-reports)
           echo "<h2>Folders</h2>" >> All_Reports.html
           for folder in */; do
             foldername=$(basename "$folder")
             echo "<a href='$folder'>$foldername/</a><br>" >> All_Reports.html
           done
-          
-          # List all HTML files and add links
+
+          # Add HTML file links (excluding the index file itself)
           echo "<h2>HTML Files</h2>" >> All_Reports.html
           for file in *.html; do
             if [ "$file" != "All_Reports.html" ]; then
               echo "<a href='$file'>$file</a><br>" >> All_Reports.html
             fi
           done
-          
-          echo "</body>" >> All_Reports.html
-          echo "</html>" >> All_Reports.html
 
-      - name: Commit and push All_Reports.html
-        run: |
-          git config --global user.name "github-actions[bot]" # Configures the user name for the commit
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com" # Configures the user email for the commit
-          git add combined-reports/All_Reports.html # Adds the generated file to the staging area
-          git commit -m "Generate All_Reports.html with links to all folders and HTML pages" # Commits the changes with a message
-          git push # Pushes the commit to the repository
+          echo "</body></html>" >> All_Reports.html # Close the HTML
+
+      - name: Upload Testapp directory as artifact
+        uses: actions/upload-artifact@v3 # Save the Testapp folder for the next job
+        with:
+          name: testapp-artifact
+          path: Testapp/
+
+  deploy-to-gh-pages: # Second job: deploy the generated HTML to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: generate-report # This job waits for the generate-report job to finish
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Download Testapp artifact from previous job
+        uses: actions/download-artifact@v3
+        with:
+          name: testapp-artifact
+          path: Testapp/
+
+      - name: Deploy Testapp folder to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
