@@ -1,47 +1,54 @@
-name: Generate index.html
+name: Generate All_Reports.html
 
 on:
   push:
-    branches:
-      - gh-pages
-workflow_dispatch:
+    paths:
+      - 'combined-reports/**' # Trigger only when changes are made inside the combined-reports folder
 
 jobs:
-  create-index:
-    runs-on: self-hosted
+  generate-all-reports:
+    runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Generate index.html
-      run: |
-        # Create the index.html file
-        echo "<!DOCTYPE html>" > index.html
-        echo "<html>" >> index.html
-        echo "<head>" >> index.html
-        echo "<title>Combined Reports</title>" >> index.html
-        echo "</head>" >> index.html
-        echo "<body>" >> index.html
-        echo "<h1>Links to Combined Reports</h1>" >> index.html
-
-        # Add links to files in the combined-reports folder
-        if [ -d "combined-reports" ]; then
-          for file in combined-reports/*; do
-            filename=$(basename "$file")
-            echo "<a href='combined-reports/$filename'>$filename</a><br>" >> index.html
+      - name: Generate All_Reports.html
+        run: |
+          # Navigate to the combined-reports folder
+          cd combined-reports
+          
+          # Create the All_Reports.html file
+          echo "<!DOCTYPE html>" > All_Reports.html
+          echo "<html>" >> All_Reports.html
+          echo "<head>" >> All_Reports.html
+          echo "<title>All Reports</title>" >> All_Reports.html
+          echo "</head>" >> All_Reports.html
+          echo "<body>" >> All_Reports.html
+          echo "<h1>All Reports</h1>" >> All_Reports.html
+          
+          # List all folders and add links
+          echo "<h2>Folders</h2>" >> All_Reports.html
+          for folder in */; do
+            foldername=$(basename "$folder")
+            echo "<a href='$folder'>$foldername/</a><br>" >> All_Reports.html
           done
-        else
-          echo "<p>No files found in the combined-reports folder.</p>" >> index.html
-        fi
+          
+          # List all HTML files and add links
+          echo "<h2>HTML Files</h2>" >> All_Reports.html
+          for file in *.html; do
+            if [ "$file" != "All_Reports.html" ]; then
+              echo "<a href='$file'>$file</a><br>" >> All_Reports.html
+            fi
+          done
+          
+          echo "</body>" >> All_Reports.html
+          echo "</html>" >> All_Reports.html
 
-        echo "</body>" >> index.html
-        echo "</html>" >> index.html
-
-    - name: Commit and push changes
-      run: |
-        git config --global user.name "github-actions[bot]"
-        git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-        git add index.html
-        git commit -m "Generate index.html with links to combined-reports"
-        git push
+      - name: Commit and push All_Reports.html
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add combined-reports/All_Reports.html
+          git commit -m "Generate All_Reports.html with links to all folders and HTML pages"
+          git push
