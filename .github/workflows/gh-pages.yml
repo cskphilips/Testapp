@@ -1,29 +1,24 @@
-name: Generate All_Reports.html
+name: Generate All_Reports.html # Name of the workflow
 
 on:
   push:
     paths:
-      - 'combined-reports/**' # Trigger only when changes are made inside the combined-reports folder
-permissions:
-  contents: write
-  pages: write
-  id-token: write
+      - 'combined-reports/**' # Trigger this workflow on pushes to the combined-reports folder
 
 jobs:
-  generate-all-reports:
-    runs-on: self-hosted
+  generate-all-reports: # Name of the job
+    runs-on: self-hosted # Specifies the type of machine to run the job on
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3 # Checks out the repository to the GitHub Actions environment
 
-      #Generate the HTML Page
       - name: Generate All_Reports.html
         run: |
-      # Navigate to the combined-reports folder
+          # Navigate to the combined-reports folder
           cd combined-reports
           
-      # Create the All_Reports.html file
+          # Create the All_Reports.html file
           echo "<!DOCTYPE html>" > All_Reports.html
           echo "<html>" >> All_Reports.html
           echo "<head>" >> All_Reports.html
@@ -32,14 +27,14 @@ jobs:
           echo "<body>" >> All_Reports.html
           echo "<h1>All Reports</h1>" >> All_Reports.html
           
-      # List all folders and add links
+          # List all folders and add links
           echo "<h2>Folders</h2>" >> All_Reports.html
           for folder in */; do
             foldername=$(basename "$folder")
             echo "<a href='$folder'>$foldername/</a><br>" >> All_Reports.html
           done
           
-      # List all HTML files and add links
+          # List all HTML files and add links
           echo "<h2>HTML Files</h2>" >> All_Reports.html
           for file in *.html; do
             if [ "$file" != "All_Reports.html" ]; then
@@ -52,8 +47,8 @@ jobs:
 
       - name: Commit and push All_Reports.html
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add combined-reports/All_Reports.html
-          git commit -m "Generate All_Reports.html with links to all folders and HTML pages"
-          git push
+          git config --global user.name "github-actions[bot]" # Configures the user name for the commit
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com" # Configures the user email for the commit
+          git add combined-reports/All_Reports.html # Adds the generated file to the staging area
+          git commit -m "Generate All_Reports.html with links to all folders and HTML pages" # Commits the changes with a message
+          git push # Pushes the commit to the repository
