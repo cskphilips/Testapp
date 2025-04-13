@@ -20,22 +20,22 @@ jobs:
           mkdir -p Testapp/combined-reports
           cp -r combined-reports/* Testapp/combined-reports/
 
-          # Navigate to the folder where HTML index will be generated
+        # Navigate to the folder where HTML index will be generated
           cd Testapp/combined-reports
 
-          # Start building the HTML index
+        # Start building the HTML index
           echo "<!DOCTYPE html>" > All_Reports.html
           echo "<html><head><title>All Reports</title></head><body>" >> All_Reports.html
           echo "<h1>All Reports</h1>" >> All_Reports.html
 
-          # Add folder links (only folders inside combined-reports)
+        # Add folder links (only folders inside combined-reports)
           echo "<h2>Folders</h2>" >> All_Reports.html
           for folder in */; do
             foldername=$(basename "$folder")
             echo "<a href='$folder'>$foldername/</a><br>" >> All_Reports.html
           done
 
-          # Add HTML file links (excluding the index file itself)
+        # Add HTML file links (excluding the index file itself)
           echo "<h2>HTML Files</h2>" >> All_Reports.html
           for file in *.html; do
             if [ "$file" != "All_Reports.html" ]; then
@@ -68,4 +68,6 @@ jobs:
       - name: Deploy Testapp folder to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }} # GitHub token for pushing to gh-pages
+          publish_branch: gh-pages                  # Branch to publish on
+          publish_dir: ./Testapp                    # Folder that will be served on GitHub Pages
