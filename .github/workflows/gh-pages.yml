@@ -38,4 +38,3 @@ jobs:
           # Add HTML file links (excluding the index file itself)
           echo "<h2>HTML Files</h2>" >> All_Reports.html
           for file*
-  
