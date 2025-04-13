@@ -16,7 +16,7 @@ jobs:
 
       - name: Prepare Testapp directory and generate All_Reports.html
         run: |
-          # Create output structure and copy reports into Testapp/
+        # Create output structure and copy reports into Testapp/
           mkdir -p Testapp/combined-reports
           cp -r combined-reports/* Testapp/combined-reports/
 
