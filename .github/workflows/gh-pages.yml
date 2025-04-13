@@ -20,22 +20,22 @@ jobs:
           mkdir -p Testapp/combined-reports
           cp -r combined-reports/* Testapp/combined-reports/
 
-          # Navigate to the folder where HTML index will be generated
+        # Navigate to the folder where HTML index will be generated
           cd Testapp/combined-reports
 
-          # Start building the HTML index
+        # Start building the HTML index
           echo "<!DOCTYPE html>" > index.html
           echo "<html><head><title>All Reports</title></head><body>" >> index.html
           echo "<h1>All Reports</h1>" >> index.html
 
-          # Add folder links (only folders inside combined-reports)
+        # Add folder links (only folders inside combined-reports)
           echo "<h2>Folders</h2>" >> index.html
           for folder in */; do
             foldername=$(basename "$folder")
             echo "<a href='$folder'>$foldername/</a><br>" >> index.html
           done
 
-          # Add HTML file links (excluding the index file itself)
+        # Add HTML file links (excluding the index file itself)
           echo "<h2>HTML Files</h2>" >> index.html
           for file in *.html; do
             if [ "$file" != "index.html" ]; then
@@ -43,5 +43,5 @@ jobs:
             fi
           done
 
-          # Close the HTML
+        # Close the HTML
           echo "</body></html>" >> index.html
