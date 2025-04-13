@@ -1,4 +1,4 @@
-name: Generate and Deploy All_Reports.html
+name: Generate and Deploy index.html
 
 # Trigger this workflow when anything changes inside the combined-reports folder
 on:
@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3 # Checkout the code from the repo
 
-      - name: Prepare Testapp directory and generate All_Reports.html
+      - name: Prepare Testapp directory and generate index.html
         run: |
           # Create output structure and copy reports into Testapp/
           mkdir -p Testapp/combined-reports
@@ -24,17 +24,24 @@ jobs:
           cd Testapp/combined-reports
 
           # Start building the HTML index
-          echo "<!DOCTYPE html>" > All_Reports.html
-          echo "<html><head><title>All Reports</title></head><body>" >> All_Reports.html
-          echo "<h1>All Reports</h1>" >> All_Reports.html
+          echo "<!DOCTYPE html>" > index.html
+          echo "<html><head><title>All Reports</title></head><body>" >> index.html
+          echo "<h1>All Reports</h1>" >> index.html
 
           # Add folder links (only folders inside combined-reports)
-          echo "<h2>Folders</h2>" >> All_Reports.html
+          echo "<h2>Folders</h2>" >> index.html
           for folder in */; do
             foldername=$(basename "$folder")
-            echo "<a href='$folder'>$foldername/</a><br>" >> All_Reports.html
+            echo "<a href='$folder'>$foldername/</a><br>" >> index.html
           done
 
           # Add HTML file links (excluding the index file itself)
-          echo "<h2>HTML Files</h2>" >> All_Reports.html
-          for file*
+          echo "<h2>HTML Files</h2>" >> index.html
+          for file in *.html; do
+            if [ "$file" != "index.html" ]; then
+              echo "<a href='$file'>$file</a><br>" >> index.html
+            fi
+          done
+
+          # Close the HTML
+          echo "</body></html>" >> index.html
