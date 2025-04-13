@@ -4,21 +4,26 @@ on:
   push:
     paths:
       - 'combined-reports/**' # Trigger only when changes are made inside the combined-reports folder
+permissions:
+  contents: write
+  pages: write
+  id-token: write
 
 jobs:
   generate-all-reports:
-    runs-on: self-hosted//
+    runs-on: self-hosted
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      #Generate the HTML Page
       - name: Generate All_Reports.html
         run: |
-          # Navigate to the combined-reports folder
+      # Navigate to the combined-reports folder
           cd combined-reports
           
-          # Create the All_Reports.html file
+      # Create the All_Reports.html file
           echo "<!DOCTYPE html>" > All_Reports.html
           echo "<html>" >> All_Reports.html
           echo "<head>" >> All_Reports.html
@@ -27,14 +32,14 @@ jobs:
           echo "<body>" >> All_Reports.html
           echo "<h1>All Reports</h1>" >> All_Reports.html
           
-          # List all folders and add links
+      # List all folders and add links
           echo "<h2>Folders</h2>" >> All_Reports.html
           for folder in */; do
             foldername=$(basename "$folder")
             echo "<a href='$folder'>$foldername/</a><br>" >> All_Reports.html
           done
           
-          # List all HTML files and add links
+      # List all HTML files and add links
           echo "<h2>HTML Files</h2>" >> All_Reports.html
           for file in *.html; do
             if [ "$file" != "All_Reports.html" ]; then
