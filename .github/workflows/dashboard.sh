@@ -1,6 +1,6 @@
 # Create index.html dynamically based on directories with HTML files
-echo '<!DOCTYPE html><html><head><title>Reports</title></head><body>' > github-pages/index.html
-echo '<h1>📊 Available HTML Reports</h1><ul>' >> github-pages/index.html
+echo '<!DOCTYPE html><html><head><title>Reports</title></head><body>' > gh-pages/index.html
+echo '<h1>📊 Available HTML Reports</h1><ul>' >> gh-pages/index.html
 
 for dir in gh-pages/*/; do
   if compgen -G "$dir*.html" > /dev/null; then
