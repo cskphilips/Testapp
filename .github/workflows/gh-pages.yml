@@ -17,7 +17,7 @@ jobs:
       # Step 2: Find folders with .html files and generate an index.html file
       - name: Generate index.html
         run: |
-          # Find all folders in the root with .html files
+      # Find all folders in the root with .html files
           folders=$(find . -type f -name "*.html" -exec dirname {} \; | sort -u | grep -v "^\.$")
           
       # Generate index.html content
