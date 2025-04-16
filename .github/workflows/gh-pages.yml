@@ -1,41 +1,46 @@
 name: Generate Index HTML
-
 on:
   push:
     branches:
       - gh-pages
-
 jobs:
   generate-index:
     runs-on: self-hosted
-
     steps:
-      # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v5
-
-      # Step 2: Generate index.html
       - name: Generate index.html
-        run: |
+        run: >
           # Find folders with .html files
-          folders=$(find . -type d -exec sh -c 'find "$1" -type f -name "*.html" | grep -q . && echo "$1"' _ {} \;)
+
+          folders=$(find . -type d -exec sh -c 'find "$1" -type f -name "*.html"
+          | grep -q . && echo "$1"' _ {} \;)
+
 
           # Create the index.html file
+
           echo "<!DOCTYPE html>" > index.html
+
           echo "<html>" >> index.html
+
           echo "<head><title>Index of HTML Reports</title></head>" >> index.html
+
           echo "<body>" >> index.html
+
           echo "<h1>Index of HTML Reports</h1>" >> index.html
+
           echo "<ul>" >> index.html
+
           for folder in $folders; do
             folder_name=$(basename $folder)
             echo "<li><a href='$folder/'>$folder_name</a></li>" >> index.html
           done
-          echo "</ul>" >> index.html
-          echo "</body>" >> index.html
-          echo "</html>" >> index.html
 
-      # Step 3: Commit and push the index.html file
+          echo "</ul>" >> index.html
+
+          echo "</body>" >> index.html
+
+          echo "</html>" >> index.html
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
