@@ -13,8 +13,6 @@ jobs:
       # Step 1: Checkout the repository
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      # Step 2: Find folders with .html files and generate an index.html file
       - name: Generate index.html
         run: | 
           folders=$(find . -type f -name "*.html" -exec dirname {} \; | sort -u | grep -v "^\.$")
