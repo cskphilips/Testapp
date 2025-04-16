@@ -1,9 +1,9 @@
 name: Generate Index HTML
 
 on:
-  pull_request:
+  push:
     branches:
-      - gh-branch
+      - gh-pages
 
 jobs:
   generate-index:
@@ -12,32 +12,34 @@ jobs:
     steps:
       # Step 1: Checkout the repository
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
+
+      # Step 2: Generate index.html
       - name: Generate index.html
-        run: | 
-          folders=$(find . -type f -name "*.html" -exec dirname {} \; | sort -u | grep -v "^\.$")
-          
-      # Generate index.html content
+        run: |
+          # Find folders with .html files
+          folders=$(find . -type d -exec sh -c 'find "$1" -type f -name "*.html" | grep -q . && echo "$1"' _ {} \;)
+
+          # Create the index.html file
           echo "<!DOCTYPE html>" > index.html
           echo "<html>" >> index.html
-          echo "<head><title>Index</title></head>" >> index.html
+          echo "<head><title>Index of HTML Reports</title></head>" >> index.html
           echo "<body>" >> index.html
-          echo "<h1>Index of Folders with HTML Files</h1>" >> index.html
+          echo "<h1>Index of HTML Reports</h1>" >> index.html
           echo "<ul>" >> index.html
           for folder in $folders; do
             folder_name=$(basename $folder)
-            echo "<li><a href='$folder_name/'>$folder_name</a></li>" >> index.html
+            echo "<li><a href='$folder/'>$folder_name</a></li>" >> index.html
           done
           echo "</ul>" >> index.html
           echo "</body>" >> index.html
           echo "</html>" >> index.html
 
-      # Step 3: Commit and push the index.html file (optional for pull requests)
+      # Step 3: Commit and push the index.html file
       - name: Commit and push changes
-        if: github.event_name == 'pull_request'
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add index.html
-          git commit -m "Generate index.html for PR"
+          git commit -m "Generate index.html"
           git push
