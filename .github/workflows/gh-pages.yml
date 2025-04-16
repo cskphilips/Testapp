@@ -20,7 +20,7 @@ jobs:
           # Find all folders in the root with .html files
           folders=$(find . -type f -name "*.html" -exec dirname {} \; | sort -u | grep -v "^\.$")
           
-          # Generate index.html content
+      # Generate index.html content
           echo "<!DOCTYPE html>" > index.html
           echo "<html>" >> index.html
           echo "<head><title>Index</title></head>" >> index.html
