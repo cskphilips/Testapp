@@ -43,5 +43,5 @@ jobs:
             fi
           done
 
-        # Close the HTML
+        # Close the HTML 
           echo "</body></html>" >> index.html
