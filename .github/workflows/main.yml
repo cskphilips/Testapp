@@ -44,6 +44,7 @@ jobs:
           for dir in html-report-*; do
           if [ -d "$dir" ]; then
            cp -r "$dir" combined-reports/
+          rm -rf "$dir"
           fi
           done
       - name: Upload Combined Artifact
