@@ -48,13 +48,6 @@ jobs:
           done
           
 
-      # Cleanup step to delete all root directories matching "html-reports*"
-          for dir in html-reports*; do
-          if [ -d "$dir" ]; then
-          rm -rf "$dir"
-          fi
-          done
-
       - name: Upload Combined Artifact
         uses: actions/upload-artifact@v4
         with:
