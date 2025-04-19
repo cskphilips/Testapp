@@ -55,7 +55,7 @@ jobs:
           name: html-reports
           path: combined-reports
 
-    # Step 6: Publish HTML reports to GitHub Pages -
+    # Step 6: Publish HTML reports to GitHub Pages --
       - name: Publish Reports to gh-reports branch
         uses: peaceiris/actions-gh-pages@v3
         with:
