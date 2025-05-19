@@ -41,6 +41,9 @@ jobs:
       - name: generate All Repors for DB with generateJson
         run: node generateJSON.js
 
+      - name: Install SQL lite3
+        run: npm install sqlite3 --save
+
       - name: generate All Repors DB for Grafana
         run: node fetchAndInsert.js
         
