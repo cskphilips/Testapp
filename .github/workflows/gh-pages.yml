@@ -1,54 +1,25 @@
-name: Generate Index HTML
+name: Run updateindex.js on gh-pages
+
 on:
   push:
     branches:
       - gh-pages
+
 jobs:
-  generate-index:
+  run-update-script:
     runs-on: self-hosted
+
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v5
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Generate index.html
-        run: >
-          # Find folders with .html files
+      - name: Set up Node.js 23.11.0
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23.11.0'
 
-          folders=$(find . -type d -exec sh -c 'find "$1" -type f -name "*.html"
-          | grep -q . && echo "$1"' _ {} \;)
+      - name: Check Node.js version
+        run: node -v
 
-          # Create the index.html file
-
-          echo "<!DOCTYPE html>" > index.html
-
-          echo "<html>" >> index.html
-
-          echo "<head><title>Index of HTML Reports</title></head>" >> index.html
-
-          echo "<body>" >> index.html
-
-          echo "<h1>Index of HTML Reports</h1>" >> index.html
-
-          echo "<ul>" >> index.html
-
-          for folder in $folders; do
-            folder_name=$(basename $folder)
-            echo "<li><a href='$folder/'>$folder_name</a></li>" >> index.html
-          done
-
-          echo "</ul>" >> index.html
-
-          echo "</body>" >> index.html
-
-          echo "</html>" >> index.html
-
-      - name: Run updateIndex.js
-        run: node updateIndex.js
-
-      - name: Commit and push changes
-        run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add index.html
-          git commit -m "Generate index.html"
-          git push
+      - name: Run updateindex.js
+        run: node updateindex.js
