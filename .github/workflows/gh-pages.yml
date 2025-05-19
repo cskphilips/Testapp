@@ -42,6 +42,6 @@ jobs:
         run: node generateJSON.js
 
       - name: generate All Repors DB for Grafana
-        run: fetchAndInsert.js
+        run: node fetchAndInsert.js
         
 
