@@ -9,13 +9,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v5
+
       - name: Generate index.html
         run: >
           # Find folders with .html files
 
           folders=$(find . -type d -exec sh -c 'find "$1" -type f -name "*.html"
           | grep -q . && echo "$1"' _ {} \;)
-
 
           # Create the index.html file
 
@@ -41,6 +41,10 @@ jobs:
           echo "</body>" >> index.html
 
           echo "</html>" >> index.html
+
+      - name: Run updateIndex.js
+        run: node updateIndex.js
+
       - name: Commit and push changes
         run: |
           git config --global user.name "GitHub Actions"
