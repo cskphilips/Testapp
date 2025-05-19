@@ -1,0 +1,20 @@
+name: Run updateindex.js on gh-pages
+
+on:
+  push:
+    branches:
+      - gh-pages
+
+jobs:
+  run-update-script:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Check Node.js version
+        run: node -v
+
+      - name: Run updateindex.js
+        run: node updateindex.js

@@ -1,0 +1,67 @@
+name: Playwright Tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  run-playwright:
+    name: Run Playwright Tests
+    runs-on: self-hosted
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '23.1.0' # Specify the Node.js version you want to use
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Install Playwright browsers
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # Step 5: Run Playwright tests
+      - name: Run Playwright tests
+        run: npx playwright test
+      - name: Combine and Upload HTML Reports
+        run: |
+          mkdir -p combined-reports
+          for dir in html-report-*; do
+          if [ -d "$dir" ]; then
+           cp -r "$dir" combined-reports/
+          rm -rf "$dir"
+          fi
+          done
+          
+
+      - name: Upload Combined Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: html-reports
+          path: combined-reports
+
+    # Step 6: Publish HTML reports to GitHub Pages --
+      - name: Publish Reports to gh-reports branch
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_branch: gh-pages
+            publish_dir: ./
+            keep_files: true
+
+
