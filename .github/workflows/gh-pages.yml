@@ -1,25 +1,33 @@
-name: Run updateindex.js on gh-pages
+name: Update gh-pages branch
 
 on:
+  workflow_dispatch:
   push:
     branches:
-      - gh-pages
+      - main
 
 jobs:
-  run-update-script:
+  update-gh-pages:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout code
+      - name: Checkout gh-pages branch
         uses: actions/checkout@v3
+        with:
+          ref: gh-pages
 
       - name: Set up Node.js 23.11.0
         uses: actions/setup-node@v3
         with:
           node-version: '23.11.0'
 
-      - name: Check Node.js version
-        run: node -v
-
       - name: Run updateindex.js
         run: node updateindex.js
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add .
+          git commit -m "Auto-update via GitHub Actions" || echo "No changes to commit"
+          git push origin gh-pages
