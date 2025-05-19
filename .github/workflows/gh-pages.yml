@@ -35,6 +35,13 @@ jobs:
           git commit -m "Auto-update via GitHub Actions" || echo "No changes to commit"
           git push origin gh-pages
 
-      - name: generateJson.js
-        run: node generateJson.js
+      - name: Generate iOS and Android JSONS - generateReports.js
+        run: node generateReports.js
+
+      - name: generate All Repors for DB with generateJson
+        run: node generateJSON.js
+
+      - name: generate All Repors DB for Grafana
+        run: fetchAndInsert.js
+        
 
