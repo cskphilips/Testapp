@@ -42,8 +42,7 @@ jobs:
 
           echo "</html>" >> index.html
 
-      - name: Run updateIndex.js
-        run: node updateIndex.js
+      
 
       - name: Commit and push changes
         run: |
@@ -52,3 +51,7 @@ jobs:
           git add index.html
           git commit -m "Generate index.html"
           git push
+
+
+      - name: Run updateIndex.js
+        run: node updateIndex.js
